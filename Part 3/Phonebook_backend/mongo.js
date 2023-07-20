@@ -1,4 +1,4 @@
-//no need of this file as we distributed the mongo.js contenets to into it's own module -models>info/still keeping it here
+//no need of this file as we distributed the mongo.js contents to into it's own module -models>info/still keeping it here
 const mongoose = require('mongoose')
 
 const password = process.argv[2]
