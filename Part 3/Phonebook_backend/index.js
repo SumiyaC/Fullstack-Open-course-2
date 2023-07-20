@@ -19,8 +19,8 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   }
-  if (response.locals.deletedPerson === null) {
-    return response.status(404).json({ error: 'Person not found' });
+  if (response.locals.deletedPerson === null || response.locals.updatedPerson ===null){
+    return response.status(404).json({ error: 'Person not found' })
   }
 
   response.status(500).json({ error: 'Server error' })
@@ -114,12 +114,27 @@ Person.findOne({ name: body.name })
     // Save the new person to the database
     newPerson.save()
       .then(savedPerson => {
-        response.json(savedPerson);
+        response.json(savedPerson)
       })
       .catch(error => next(error))
   })
   .catch(error => next(error))
 })
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id;
+  const body = request.body;
+
+  Person.findByIdAndUpdate(id, { number: body.number }, { new: true })
+    .then(updatedPerson => {
+      if (updatedPerson) {
+        response.json(updatedPerson)
+      } else {
+        response.locals.updatedPerson = null
+      }
+    })
+    .catch(error => next(error))
+});
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
