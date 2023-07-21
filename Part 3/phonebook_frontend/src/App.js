@@ -87,7 +87,8 @@ const App = () => {
        
         .catch((error) => {
           console.error('Error saving person:', error);
-          showMessage('Failed to add person.', true);
+          //showMessage('Failed to add person.', true);
+          showMessage(error.response.data.error,true)
         });
     }
   };

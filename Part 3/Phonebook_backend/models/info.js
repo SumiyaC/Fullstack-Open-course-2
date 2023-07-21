@@ -14,9 +14,24 @@ mongoose
 
 
 const phonebookSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-});
+  name: {
+    type: String,
+    required: true,
+    minlength: 3,
+  },
+  number: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        const phoneRegex = /^(?:\d{2,3}-\d+)$/;
+        const isLengthValid = value.replace('-', '').length >= 8;
+
+        return phoneRegex.test(value) && isLengthValid;
+      } 
+    }
+  }
+})
 
 phonebookSchema.set('toJSON', {
   transform: (document, returnedObject) => {
